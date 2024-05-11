@@ -1,25 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useEffect } from "react";
+import "./App.css";
+import { createBrowserRouter } from "react-router-dom";
+import Signup from "./Pages/Signup";
+import Create from "./Pages/Create";
+import View from "./Pages/ViewPost";
+
+/**
+ * ?  =====Import Components=====
+ */
+import Home from "./Pages/Home";
+import  { AuthContext} from "./store/FirebaseContext";
+import Login from "./Pages/Login";
+// import { Firebase } from "./firebase/config";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function App() {
+  const {setUser}= useContext(AuthContext)
+  const auth= getAuth()
+  useEffect(()=>{
+    onAuthStateChanged(auth,((user)=>{
+      setUser(user)
+      // console.log(user)
+    }))
+  })
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+        <div>
+          <Home />
+        </div>
   );
 }
 
-export default App;
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "signup",
+    element: <Signup />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "create",
+    element: <Create />,
+  },
+  {
+    path: "view",
+    element: <View />,
+  },
+]);
+
+export default router;
